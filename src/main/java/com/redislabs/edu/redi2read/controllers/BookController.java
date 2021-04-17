@@ -27,9 +27,9 @@ public class BookController {
     private CategoryRepository categoryRepository;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> all( //
-                                                    @RequestParam(defaultValue = "0") Integer page, //
-                                                    @RequestParam(defaultValue = "10") Integer size //
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
     ) {
         Pageable paging = PageRequest.of(page, size);
         Page<Book> pagedResult = bookRepository.findAll(paging);

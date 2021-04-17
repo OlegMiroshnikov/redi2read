@@ -40,9 +40,9 @@ public class CreateBookRatings implements CommandLineRunner {
                 user.setId(userId);
                 Book book = new Book();
                 book.setId(bookId);
-                BookRating rating = BookRating.builder() //
-                        .user(user) //
-                        .book(book) //
+                BookRating rating = BookRating.builder()
+                        .user(user)
+                        .book(book)
                         .rating(stars).build();
                 bookRatingRepo.save(rating);
             });

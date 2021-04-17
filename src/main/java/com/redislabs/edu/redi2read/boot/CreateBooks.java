@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redislabs.edu.redi2read.models.Book;
@@ -30,17 +31,18 @@ public class CreateBooks implements CommandLineRunner {
     private BookRepository bookRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
         if (bookRepository.count() == 0) {
             ObjectMapper mapper = new ObjectMapper();
             TypeReference<List<Book>> typeReference = new TypeReference<List<Book>>() {
             };
-            List<File> files = //
-                    Files.list(Paths.get(getClass().getResource("/data/books").toURI())) //
-                            .filter(Files::isRegularFile) //
-                            .filter(path -> path.toString().endsWith(".json")) //
-                            .map(java.nio.file.Path::toFile) //
+            List<File> files =
+                    Files.list(Paths.get(getClass().getResource("/data/books").toURI()))
+                            .filter(Files::isRegularFile)
+                            .filter(path -> path.toString().endsWith(".json"))
+                            .map(java.nio.file.Path::toFile)
                             .collect(Collectors.toList());
             Map<String, Category> categories = new HashMap<String, Category>();
             files.forEach(file -> {
