@@ -41,6 +41,7 @@ public class User {
     private String passwordConfirm;
     @Reference
     private Set<Role> roles = new HashSet<Role>();
+
     public void addRole(Role role) {
         roles.add(role);
     }
