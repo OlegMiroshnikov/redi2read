@@ -6,6 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Reference;
@@ -16,7 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@JsonIgnoreProperties(value = { "password", "passwordConfirm" }, allowSetters = true)
+@JsonIgnoreProperties(value = {"password", "passwordConfirm"}, allowSetters = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 @Data
@@ -39,10 +40,18 @@ public class User {
     private String password;
     @Transient
     private String passwordConfirm;
-    @Reference
-    private Set<Role> roles = new HashSet<Role>();
 
+    @Reference
+    @JsonIdentityReference(alwaysAsId = true)
+    private Set<Role> roles = new HashSet<Role>();
     public void addRole(Role role) {
         roles.add(role);
+    }
+
+    @Reference
+    @JsonIdentityReference(alwaysAsId = true)
+    private Set<Book> books = new HashSet<Book>();
+    public void addBook(Book book) {
+        books.add(book);
     }
 }
