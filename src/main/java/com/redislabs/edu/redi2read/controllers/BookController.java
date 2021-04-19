@@ -17,6 +17,8 @@ import com.redislabs.lettusearch.RediSearchCommands;
 import com.redislabs.lettusearch.SearchResults;
 import com.redislabs.lettusearch.StatefulRediSearchConnection;
 import org.springframework.beans.factory.annotation.Value;
+import com.redislabs.lettusearch.Suggestion;
+import com.redislabs.lettusearch.SuggetOptions;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +43,15 @@ public class BookController {
         RediSearchCommands<String, String> commands = searchConnection.sync();
         SearchResults<String, String> results = commands.search(searchIndexName, query);
         return results;
+    }
+
+    @Value("${app.autoCompleteKey}")
+    private String autoCompleteKey;
+    @GetMapping("/authors")
+    public List<Suggestion<String>> authorAutoComplete(@RequestParam(name="q")String query) {
+        RediSearchCommands<String, String> commands = searchConnection.sync();
+        SuggetOptions options = SuggetOptions.builder().max(20L).build();
+        return commands.sugget(autoCompleteKey, query, options);
     }
 
     @GetMapping
