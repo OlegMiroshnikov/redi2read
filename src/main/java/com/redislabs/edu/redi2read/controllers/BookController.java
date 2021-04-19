@@ -13,6 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.redislabs.lettusearch.RediSearchCommands;
+import com.redislabs.lettusearch.SearchResults;
+import com.redislabs.lettusearch.StatefulRediSearchConnection;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +30,18 @@ public class BookController {
     private BookRepository bookRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Value("${app.booksSearchIndexName}")
+    private String searchIndexName;
+    @Autowired
+    private StatefulRediSearchConnection<String, String> searchConnection;
+
+    @GetMapping("/search")
+    public SearchResults<String,String> search(@RequestParam(name="q")String query) {
+        RediSearchCommands<String, String> commands = searchConnection.sync();
+        SearchResults<String, String> results = commands.search(searchIndexName, query);
+        return results;
+    }
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> all(
